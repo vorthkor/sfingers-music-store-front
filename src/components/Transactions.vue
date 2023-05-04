@@ -74,7 +74,7 @@
                               md="4"
                             >
                               <v-text-field
-                                v-model="editedItem.productId"
+                                v-model="editedItem.productID"
                                 label="ProductID"
                               ></v-text-field>
                             </v-col>
@@ -84,7 +84,7 @@
                               md="4"
                             >
                               <v-text-field
-                                v-model="editedItem.clientId"
+                                v-model="editedItem.clientID"
                                 label="ClientID"
                               ></v-text-field>
                             </v-col>
@@ -155,20 +155,30 @@
           sortable: false,
           key: 'id'
         },
-        {title: 'ProductID', value: 'productId'},
-        {title: 'ClientID', value: 'clientId'},
+        {title: 'Price', value: 'price'},
+        {title: 'ClientID', value: 'clientID'},
+        {title: 'ProductID', value: 'productID'},
+        {title: 'Product Name', value: 'productName'},
         {title: 'Quantity', value: 'quantity'},
+        {title: 'Created At', value: 'createdAt'},
       ],
+    //   "id": "64385699843f8e6f81626d50",
+    // "price": "958",
+    // "clientID": "642cbb1135a85ab979be9e77",
+    // "productID": "6420c3208a60435f847b5e18",
+    // "productName": "Violão",
+    // "quantity": "2",
+    // "createdAt": "2023-04-13T19:23:05.123Z"
       selectedId: null,
       editedIndex: -1,
       editedItem: {
-        productId: '',
-        clientId: '',
+        clientID: '',
+        productID: '',
         quantity: '',
       },
       defaultItem: {
-        productId: '',
-        clientId: '',
+        clientID: '',
+        productID: '',
         quantity: '',
       },
     }),
