@@ -270,7 +270,10 @@
       getServerData() {
         Api.getProducts(
           (body) => {
-            this.items = body
+            for (let products of Object.keys(body)) {
+              var product = body[products]
+              this.items = product
+            }
           }
         ),
         () => {
