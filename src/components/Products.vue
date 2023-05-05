@@ -47,6 +47,16 @@
                   inset
                   vertical
                   ></v-divider>
+                  <v-btn
+                    append-icon="mdi-refresh"
+                    single-line
+                    @click="getServerData"
+                  ></v-btn>
+                  <v-divider
+                  class="mx-4"
+                  inset
+                  vertical
+                  ></v-divider>
 
                   <v-dialog
                     v-model="dialog"
@@ -307,8 +317,8 @@
       },
 
       close () {
-        this.dialog = false
         this.getServerData()
+        this.dialog = false
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
@@ -317,8 +327,8 @@
       },
 
       closeDelete () {
-        this.dialogDelete = false
         this.getServerData()
+        this.dialogDelete = false
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1

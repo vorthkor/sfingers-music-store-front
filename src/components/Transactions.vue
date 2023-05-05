@@ -46,6 +46,16 @@
                   inset
                   vertical
                   ></v-divider>
+                  <v-btn
+                    append-icon="mdi-refresh"
+                    single-line
+                    @click="getServerData"
+                  ></v-btn>
+                  <v-divider
+                  class="mx-4"
+                  inset
+                  vertical
+                  ></v-divider>
 
                   <v-dialog
                     v-model="dialog"
@@ -143,7 +153,7 @@
   export default {
     data: () => ({
       dialog: false,
-      itemsPerPage: 10,
+      itemsPerPage: 50,
       search: '',
       searched: [],
       items: [],
@@ -162,13 +172,6 @@
         {title: 'Quantity', value: 'quantity'},
         {title: 'Created At', value: 'createdAt'},
       ],
-    //   "id": "64385699843f8e6f81626d50",
-    // "price": "958",
-    // "clientID": "642cbb1135a85ab979be9e77",
-    // "productID": "6420c3208a60435f847b5e18",
-    // "productName": "Violão",
-    // "quantity": "2",
-    // "createdAt": "2023-04-13T19:23:05.123Z"
       selectedId: null,
       editedIndex: -1,
       editedItem: {
@@ -210,8 +213,8 @@
       },
 
       close () {
-        this.dialog = false
         this.getServerData()
+        this.dialog = false
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
