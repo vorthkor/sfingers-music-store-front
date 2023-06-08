@@ -15,10 +15,10 @@ export default class Ajax {
             })
     }
 
-    static post(url, data = {}, headers = {}, success, failure) {
+    static post(url, data = {}, success, failure) {
         axios
             .post(url, data, {
-                headers: headers
+                // headers: headers
             })
             .then(res => {
                 if (success) success(res.data)

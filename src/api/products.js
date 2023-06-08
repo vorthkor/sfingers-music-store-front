@@ -11,7 +11,7 @@ export default {
     updateProduct(data, success, error) {
         Ajax.put(apiSfingers.Products + `/${data.id}/update`, data, success, error)
     },
-    deleteProduct(data, success) {
-        Ajax.delete(apiSfingers.Products + `/${data}/delete`, success, () => false)
+    deleteProduct(data, success, error) {
+        Ajax.delete(apiSfingers.Products + `/${data}/delete`, success, error)
     },
 }
