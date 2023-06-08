@@ -7,4 +7,6 @@ export const apiSfingers = {
     Products: apiSfingersBase + "/products",
     Clients: apiSfingersBase + "/clients",
     Transactions: apiSfingersBase + "/transactions",
+    Admins: apiSfingersBase + "/admins",
+
 }
