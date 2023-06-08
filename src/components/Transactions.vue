@@ -131,6 +131,12 @@
                       </v-card-actions>
                     </v-card>
                   </v-dialog>
+
+                  <v-dialog v-model="dialogErrors" max-width="max-width">
+                    <v-card>
+                      <v-card-title class="text-h5">{{message}}</v-card-title>
+                    </v-card>
+                  </v-dialog>
                 </v-toolbar>
               </template>
               
@@ -153,6 +159,7 @@
   export default {
     data: () => ({
       dialog: false,
+      dialogErrors: false,
       itemsPerPage: 50,
       search: '',
       searched: [],
@@ -204,12 +211,12 @@
         Api.getTransactions(
           (body) => {
             this.items = body
+          },
+          (error) => {
+            this.dialogErrors = true
+            this.message = error.response.data.errorMessage
           }
-        ),
-        () => {
-          this.showErrorMessage = true
-          this.message = 'Failed to get transactions'
-        }
+        )
       },
 
       close () {
@@ -225,13 +232,15 @@
       save () {
         if (this.editedIndex === -1) {
           Api.insertTransaction(
-            this.editedItem
-          ),
-          () => {
-            this.showErrorMessage = true
-            this.message = 'Failed to insert'
-          }
+            this.editedItem,
+            () => {},
+            (error) => {
+              this.dialogErrors = true
+              this.message = error.response.data.errorMessage
+            } 
+          )
         } else {
+          this.dialogErrors = true
           this.message = 'Failed to insert'
         }
         this.close()

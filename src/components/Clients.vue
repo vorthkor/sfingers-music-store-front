@@ -134,6 +134,13 @@
                       </v-card-actions>
                     </v-card>
                   </v-dialog>
+
+                  <v-dialog v-model="dialogErrors" max-width="max-width">
+                    <v-card>
+                      <v-card-title class="text-h5">{{message}}</v-card-title>
+                    </v-card>
+                  </v-dialog>
+
                   <v-dialog v-model="dialogDelete" max-width="500px">
                     <v-card>
                       <v-card-title class="text-h5">Are you sure you want to delete this client?</v-card-title>
@@ -191,6 +198,7 @@
     data: () => ({
       dialog: false,
       dialogDelete: false,
+      dialogErrors: false,
       itemsPerPage: 10,
       search: '',
       searched: [],
@@ -246,12 +254,12 @@
               var client = body[clients]
               this.items = client
             }
+          },
+          (error) => {
+            this.dialogErrors = true
+            this.message = error.response.data.errorMessage
           }
-        ),
-        () => {
-          this.showErrorMessage = true
-          this.message = 'Failed to get clients'
-        }
+        )
       },
 
       editItem (item) {
@@ -301,20 +309,26 @@
       save () {
         if (this.editedIndex > -1) {
           Api.updateClient(
-            this.editedItem
-          ),
-          () => {
-            this.showErrorMessage = true
-            this.message = 'Failed to insert'
-          }
+            this.editedItem,
+            () => {
+            },
+            (error) => {
+              this.dialogAdmins = false
+              this.dialogErrors = true
+              this.message = error.response.data.errorMessage
+            }
+          )
         } else {
           Api.insertClient(
-            this.editedItem
-          ),
-          () => {
-            this.showErrorMessage = true
-            this.message = 'Failed to insert'
-          }
+            this.editedItem,
+            () => {
+            },
+            (error) => {
+              this.dialogAdmins = false
+              this.dialogErrors = true
+              this.message = error.response.data.errorMessage
+            }
+          )
         }
         this.close()
       },
