@@ -2,10 +2,10 @@
 
 ## Routes
 
-PRODUCTS
+### PRODUCTS
 
 ```sh
-// products routes
+# products routes
 router.use('/products', productsRoutes)
 
 get /
@@ -17,10 +17,10 @@ put /:productID/update
 delete /:productID/delete
 ```
 
-CLIENTS
+### CLIENTS
 
 ```sh
-//clients routes
+# clients routes
 router.use('/clients', clientsRoutes)
 
 get /
@@ -32,13 +32,26 @@ put /:clientID/update
 delete /:clientID/delete
 ```
 
-TRANSACTIONS
+### TRANSACTIONS
 
 ```sh
-//transactions routes
+# transactions routes
 router.use('/transactions', transactionsRoutes)
 
 get /
+
+post /create
+```
+
+---
+
+### ADMINS
+
+```sh
+# admins routes
+router.use('/admins', adminsRoutes)
+
+post /login
 
 post /create
 ```
