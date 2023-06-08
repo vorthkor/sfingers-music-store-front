@@ -57,6 +57,16 @@
                   inset
                   vertical
                   ></v-divider>
+                  <v-btn
+                    append-icon="mdi-logout"
+                    single-line
+                    @click="logoutNow"
+                  ></v-btn>
+                  <v-divider
+                  class="mx-4"
+                  inset
+                  vertical
+                  ></v-divider>
 
                   <v-dialog
                     v-model="dialog"
@@ -156,14 +166,21 @@
                         <v-btn
                           color="blue-darken-1"
                           variant="text"
-                          @click="save"
+                          @click="login"
                         >
                           Save
                         </v-btn>
                       </v-card-actions>
                     </v-card>
                   </v-dialog>
-                  <v-dialog v-model="dialogDelete" max-width="500px">
+
+                  <v-dialog v-model="dialogErrors" max-width="max-width">
+                    <v-card>
+                      <v-card-title class="text-h5">{{message}}</v-card-title>
+                    </v-card>
+                  </v-dialog>
+
+                  <v-dialog v-model="dialogDelete" max-width="900px">
                     <v-card>
                       <v-card-title class="text-h5">Are you sure you want to delete this product?</v-card-title>
                       <v-card-actions>
@@ -174,6 +191,51 @@
                       </v-card-actions>
                     </v-card>
                   </v-dialog>
+
+                  <v-dialog v-model="dialogLoginOk" max-width="500px">
+                    <v-card>
+                      <v-card-title class="text-h5">Successfully logged in!</v-card-title>
+                    </v-card>
+                  </v-dialog>
+
+                  <v-dialog v-model="dialogAdmins" max-width="750px">
+                    <v-card>
+                      <v-card-title class="text-h5">You need to be an administrator to create a product, please login.</v-card-title>
+                      <v-card-text>
+                        <v-container>
+                          <v-row>
+                            <v-col
+                              cols="12"
+                              sm="6"
+                              md="4"
+                            >
+                              <v-text-field
+                                v-model="adminItem.username"
+                                label="Username"
+                              ></v-text-field>
+                            </v-col>
+                            <v-col
+                              cols="12"
+                              sm="6"
+                              md="4"
+                            >
+                            <v-text-field
+                              v-model="adminItem.password"
+                              label="Password"
+                            ></v-text-field>
+                            </v-col>
+                          </v-row>
+                        </v-container>
+                      </v-card-text>
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="blue-darken-1" variant="text" @click="closeDelete">Cancel</v-btn>
+                        <v-btn color="blue-darken-1" variant="text" @click="loginConfirm">Login</v-btn>
+                        <v-spacer></v-spacer>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+
                 </v-toolbar>
               </template>
 
@@ -216,11 +278,18 @@
 
 <script>
   import Api from "@/api/products.js"
+  import ApiAdm from "@/api/admins.js"
+
+
   export default {
     data: () => ({
       dialog: false,
       dialogDelete: false,
-      itemsPerPage: 10,
+      dialogAdmins: false,
+      dialogLoginOk: false,
+      dialogErrors: false,
+      loggedAdmin: false,
+      itemsPerPage: 20,
       search: '',
       searched: [],
       items: [],
@@ -258,6 +327,10 @@
         price: '',
         quantity: '',
       },
+      adminItem: {
+        username: '',
+        password: '',
+      },
     }),
     computed: {
       formTitle () {
@@ -284,12 +357,20 @@
               var product = body[products]
               this.items = product
             }
+          },
+          (error) => {
+            this.dialogErrors = true
+            this.message = error.response.data.errorMessage
           }
-        ),
-        () => {
-          this.showErrorMessage = true
-          this.message = 'Failed to get products'
-        }
+        )
+      },
+
+      logoutNow() {
+        this.loggedAdmin = false
+        this.dialogErrors = true
+        this.message = "Logged out"
+        this.adminItem.username = ''
+        this.adminItem.password = ''
       },
 
       editItem (item) {
@@ -310,7 +391,7 @@
           this.selectedId
         ),
         () => {
-          this.showErrorMessage = true
+          this.dialogErrors = true
           this.message = 'Failed to delete'
         }
         this.closeDelete()
@@ -336,23 +417,56 @@
         this.getServerData()
       },
 
+      login() {
+        if(!this.loggedAdmin) {
+          this.dialogAdmins = true
+        } else {
+          this.save()
+        }
+      },
+
+      loginConfirm() {
+        ApiAdm.adminLogin(
+          this.adminItem,
+          (body) => {
+            this.dialogLoginOk = true,
+            this.dialogAdmins = false
+            this.loggedAdmin = true
+            this.save()
+          },
+          (error) => {
+            this.dialogErrors = true
+            this.message = error.response.data.errorMessage
+
+          }
+        )
+      },
+
       save () {
         if (this.editedIndex > -1) {
           Api.updateProduct(
-            this.editedItem
-          ),
-          () => {
-            this.showErrorMessage = true
-            this.message = 'Failed to insert'
-          }
+            this.editedItem,
+            () => {
+              this.dialogAdmins = false
+            },
+            (error) => {
+              this.dialogAdmins = false
+              this.dialogErrors = true
+              this.message = error.response.data.errorMessage
+            }
+          )
         } else {
           Api.insertProduct(
-            this.editedItem
-          ),
-          () => {
-            this.showErrorMessage = true
-            this.message = 'Failed to insert'
-          }
+            this.editedItem,
+            () => {
+              this.dialogAdmins = false
+            },
+            (error) => {
+              this.dialogAdmins = false
+              this.dialogErrors = true
+              this.message = error.response.data.errorMessage
+            }
+          )
         }
         this.close()
       },
