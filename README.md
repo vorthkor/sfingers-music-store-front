@@ -1,5 +1,10 @@
 # Sfingers Music Store Frontend
 
+## Index
+
+* [Routes](#routes)
+* [Project setup](#project-setup)
+
 ## Routes
 
 ### PRODUCTS
@@ -55,6 +60,7 @@ post /login
 
 post /create
 ```
+**[⬆ Back to Index](#index)**
 
 ---
 
@@ -113,3 +119,13 @@ pnpm lint
 ### Customize configuration
 
 See [Configuration Reference](https://vitejs.dev/config/).
+
+**[⬆ Back to Index](#index)**
+
+---
+
+## Screenshots
+
+[Project images](https://github.com/vorthkor/sfingers-music-store-front/tree/main/src/assets/screenshots)
+
+**[⬆ Back to Index](#index)**
